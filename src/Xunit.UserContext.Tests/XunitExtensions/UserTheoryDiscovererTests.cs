@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using NSubstitute;
-using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 using Xunit.UserContext.XunitExtensions;
 
-namespace Xunit.UserContext.Tests.xUnitExtensions
+namespace Xunit.UserContext.Tests.XunitExtensions
 {
     public class UserTheoryDiscovererTests
     {
@@ -17,20 +17,20 @@ namespace Xunit.UserContext.Tests.xUnitExtensions
 
         private UserTheoryDiscoverer CreateUserTheoryDiscoverer()
         {
-            return new UserTheoryDiscoverer(this.subMessageSink);
+            return new UserTheoryDiscoverer(subMessageSink);
         }
 
         [Fact]
         public void Discover_WithNullAttribute_CreatesTestCase()
         {
             // Arrange
-            var userTheoryDiscoverer = this.CreateUserTheoryDiscoverer();
-            var discoveryOptions = TestFrameworkOptions.ForDiscovery();
-            var testMethod = Substitute.For<ITestMethod>();
-            var theoryAttribute = Substitute.For<IAttributeInfo>();            
+            UserTheoryDiscoverer userTheoryDiscoverer = CreateUserTheoryDiscoverer();
+            ITestFrameworkDiscoveryOptions discoveryOptions = TestFrameworkOptions.ForDiscovery();
+            ITestMethod testMethod = Substitute.For<ITestMethod>();
+            IAttributeInfo theoryAttribute = Substitute.For<IAttributeInfo>();
 
             // Act
-            var result = userTheoryDiscoverer.Discover(discoveryOptions, testMethod, theoryAttribute);
+            IEnumerable<IXunitTestCase> result = userTheoryDiscoverer.Discover(discoveryOptions, testMethod, theoryAttribute);
 
             // Assert
             Assert.IsAssignableFrom<IEnumerable<UserContextTestCase>>(result);

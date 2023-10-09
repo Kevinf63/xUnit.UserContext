@@ -12,8 +12,8 @@ namespace Xunit.UserContext.XunitExtensions
     /// </summary>
     public class UserTheoryDiscoverer : IXunitTestCaseDiscoverer
     {
-        readonly IMessageSink diagnosticMessageSink;
-        readonly TheoryDiscoverer theoryDiscoverer;
+        private readonly IMessageSink diagnosticMessageSink;
+        private readonly TheoryDiscoverer theoryDiscoverer;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="UserTheoryDiscoverer"/> class.
@@ -34,12 +34,11 @@ namespace Xunit.UserContext.XunitExtensions
         /// <returns>Returns zero or more UserContextTest cases represented by the test method.</returns>
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)
         {
-            var defaultMethodDisplay = discoveryOptions.MethodDisplayOrDefault();
-            var defaultMethodDisplayOptions = discoveryOptions.MethodDisplayOptionsOrDefault();
+            TestMethodDisplay defaultMethodDisplay = discoveryOptions.MethodDisplayOrDefault();
+            TestMethodDisplayOptions defaultMethodDisplayOptions = discoveryOptions.MethodDisplayOptionsOrDefault();
 
             return theoryDiscoverer.Discover(discoveryOptions, testMethod, factAttribute)
                                    .Select(testCase => new UserContextTestCase(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testCase?.TestMethod, testCase?.TestMethodArguments));
         }
-
     }
 }

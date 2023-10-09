@@ -1,16 +1,19 @@
 ﻿using SimpleImpersonation;
 
-namespace xUnit.UserContext.Configuration
+namespace Xunit.UserContext.Configuration
 {
     /// <summary>
     /// Default settings for test attributes
     /// </summary>
-    public class Default
+    public static class Default
     {
-        /// Use network login
-        public const LogonType Logon = LogonType.Network;
-
+        /// <summary>
         /// Display username at the end of the test
+        /// </summary>
         public const bool DisplayName = true;
+        /// <summary>
+        /// Use network login
+        /// </summary>
+        public const LogonType Logon = LogonType.Network;
     }
 }

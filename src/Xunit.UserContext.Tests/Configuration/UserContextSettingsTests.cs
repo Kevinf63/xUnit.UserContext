@@ -1,10 +1,8 @@
-using SimpleImpersonation;
 using System;
-using xUnit.UserContext.Configuration;
-using Xunit;
+using SimpleImpersonation;
 using Xunit.UserContext.Configuration;
 
-namespace xUnit.UserContext.Tests.Configuration
+namespace Xunit.UserContext.Tests.Configuration
 {
     public class UserContextSettingsTests
     {
@@ -12,23 +10,34 @@ namespace xUnit.UserContext.Tests.Configuration
         public void GetCredentials_WithNullCredentials_ThrowsOnGetCredentials()
         {
             // Arrange
-            var unitUnderTest = new UserContextSettings(null, null, null, Default.Logon, false);
+            UserContextSettings unitUnderTest = new(
+                username: null,
+                password: null,
+                domain: null,
+                logonType: Default.Logon,
+                displayNameOnTest: false);
 
             // Act
-            Action act = () => unitUnderTest.GetCredentials();
+            void act()
+            {
+                unitUnderTest.GetCredentials();
+            }
 
             // Assert
             Assert.Throws<ArgumentException>(act);
         }
-
         [Fact]
         public void GetCredentials_WithValidStrings_ReturnsUserCredentials()
         {
             // Arrange
-            var unitUnderTest = new UserContextSettings("hello", "world", Default.Logon, false);
+            UserContextSettings unitUnderTest = new(
+                username: "hello",
+                password: "world",
+                logonType: Default.Logon,
+                displayNameOnTest: false);
 
             // Act
-            var credentials = unitUnderTest.GetCredentials();
+            UserCredentials credentials = unitUnderTest.GetCredentials();
 
             // Assert
             Assert.IsAssignableFrom<UserCredentials>(credentials);

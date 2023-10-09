@@ -1,5 +1,4 @@
 ﻿using SimpleImpersonation;
-using xUnit.UserContext.Configuration;
 using Xunit.Sdk;
 using Xunit.UserContext.Configuration;
 

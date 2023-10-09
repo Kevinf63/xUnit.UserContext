@@ -2,7 +2,7 @@ using System.Net;
 using Xunit;
 using Xunit.UserContext.Services;
 
-namespace xUnit.UserContext.Tests.Utilities
+namespace Xunit.UserContext.Tests.Utilities
 {
     public class UserSecretsCredentialUtilityTests
     {
@@ -10,25 +10,24 @@ namespace xUnit.UserContext.Tests.Utilities
         public void GetCredentials_WithExistingSecretsId_ReturnsValidCredentials()
         {
             // Arrange
-            var userSecretsId = "IntergrationTestID123";
-            var userProvider = new UserSecretsProvider(userSecretsId);
+            const string userSecretsId = "IntergrationTestID123";
+            UserSecretsProvider userProvider = new(userSecretsId);
 
             // Act
-            var result = userProvider.GetCredentials();
+            NetworkCredential result = userProvider.GetCredentials();
 
             // Assert
             Assert.IsAssignableFrom<NetworkCredential>(result);
         }
-
         [Fact]
         public void GetCredentials_WithUnsetSecretsId_ReturnsEmptyAndDoesntThrow()
         {
             // Arrange
-            var userSecretsId = "NonExistantId";
-            var userProvider = new UserSecretsProvider(userSecretsId);
+            const string userSecretsId = "NonExistantId";
+            UserSecretsProvider userProvider = new(userSecretsId);
 
             // Act
-            var result = userProvider.GetCredentials();
+            NetworkCredential result = userProvider.GetCredentials();
 
             // Assert
             Assert.True(string.IsNullOrEmpty(result.UserName));

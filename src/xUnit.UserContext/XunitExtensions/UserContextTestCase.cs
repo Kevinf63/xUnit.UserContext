@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using Xunit.UserContext;
 using Xunit.UserContext.Configuration;
 
 namespace Xunit.UserContext.XunitExtensions
@@ -22,8 +21,6 @@ namespace Xunit.UserContext.XunitExtensions
         /// </summary>
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         public UserContextTestCase() : base() { }
-
-
         /// <summary>
         /// Initialises a new instance of <see cref="UserContextTestCase"/>
         /// </summary>
@@ -36,6 +33,22 @@ namespace Xunit.UserContext.XunitExtensions
             : base(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod, testMethodArguments)
         { }
 
+        /// <summary>
+        /// Override base class to customise test display name to include username
+        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            IAttributeInfo userContextTestAttributes = TestMethod.Method.GetCustomAttributes(typeof(IUserContextTest)).First();
+
+            _userContext = userContextTestAttributes.GetNamedArgument<UserContextSettings>(nameof(UserTheoryAttribute.UserContext));
+
+            if (_userContext.DisplayNameOnTest)
+            {
+                DisplayName += $"_(user: {_userContext?.DisplayName})";
+            }
+        }
 
         /// <summary>
         /// Override test run to use UserContextTestCaseRunner
@@ -49,21 +62,6 @@ namespace Xunit.UserContext.XunitExtensions
         public override Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
         {
             return new UserContextTestCaseRunner(this, DisplayName, SkipReason, constructorArguments, TestMethodArguments, messageBus, aggregator, cancellationTokenSource, _userContext).RunAsync();
-        }
-
-        /// <summary>
-        /// Override base class to customise test display name to include username 
-        /// </summary>
-        protected override void Initialize()
-        {
-            base.Initialize();
-
-            var userContextTestAttributes = TestMethod.Method.GetCustomAttributes(typeof(IUserContextTest)).First();
-
-            _userContext = userContextTestAttributes.GetNamedArgument<UserContextSettings>(nameof(UserTheoryAttribute.UserContext));
-
-            if (_userContext.DisplayNameOnTest)
-                DisplayName += $"_(user: {_userContext?.DisplayName})";
         }
     }
 }

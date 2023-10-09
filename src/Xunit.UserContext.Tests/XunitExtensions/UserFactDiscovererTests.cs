@@ -1,10 +1,12 @@
-using NSubstitute;
+using System.Collections.Generic;
 using System.Linq;
+using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 using Xunit.UserContext.XunitExtensions;
 
-namespace xUnit.UserContext.Tests.xUnitExtensions
+namespace Xunit.UserContext.Tests.XunitExtensions
 {
     public class UserFactDiscovererTests
     {
@@ -12,7 +14,7 @@ namespace xUnit.UserContext.Tests.xUnitExtensions
 
         public UserFactDiscovererTests()
         {
-            this._subMessageSink = Substitute.For<IMessageSink>();
+            _subMessageSink = Substitute.For<IMessageSink>();
         }
 
         private UserFactDiscoverer CreateUserFactDiscoverer()
@@ -24,13 +26,13 @@ namespace xUnit.UserContext.Tests.xUnitExtensions
         public void Discover_WithNullAttribute_CreatesTestCase()
         {
             // Arrange
-            var userFactDiscoverer = this.CreateUserFactDiscoverer();
-            var discoveryOptions = TestFrameworkOptions.ForDiscovery();
-            var testMethod = Substitute.For<ITestMethod>();
+            UserFactDiscoverer userFactDiscoverer = CreateUserFactDiscoverer();
+            ITestFrameworkDiscoveryOptions discoveryOptions = TestFrameworkOptions.ForDiscovery();
+            ITestMethod testMethod = Substitute.For<ITestMethod>();
             IAttributeInfo factAttribute = null;
 
             // Act
-            var result = userFactDiscoverer.Discover(discoveryOptions, testMethod, factAttribute);
+            IEnumerable<IXunitTestCase> result = userFactDiscoverer.Discover(discoveryOptions, testMethod, factAttribute);
 
             // Assert
             Assert.IsAssignableFrom<UserContextTestCase>(result.Single());
