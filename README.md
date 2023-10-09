@@ -5,6 +5,9 @@ xUnit.UserContext is an attribute based extension for [xUnit](https://github.com
 
 The aim of this library is to allow easy usage in xUnit tests with minimal code. This library utilises the wrapper library [SimpleImpersonation](https://github.com/mj1856/SimpleImpersonation) to use the Win32 LogonUser API for Impersonation. Additionally, because storing credentials in code is not ideal, this library also supports retrieval of credentials stored using ASP.NET [UserSecrets](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.2&tabs=windows).
 
+## Notes
+- **09/10/2023 - BREAKING CHANGE** - Targeting .NET 6 SDK. Refactored `UserContextTestInvoker` class to invoke the test method with `WindowsIdentity.RunImpersonatedAsync`.
+
 ## Installation
 
 Using the dotnet cli:
@@ -92,21 +95,17 @@ dotnet user-secrets set "Password" MyPassword --id TestUserSecretsId
 dotnet user-secrets set "Domain" Domain --id TestUserSecretsId
 ```
 
-*Note: the secrets id used to set these values must be the same as what is provided to the attribute*
-
 ## Issues & Contributions
 
 If you find a bug or have a feature request, please report them in this repository's issues section. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-**Note: Impersonation does not work with async**
-
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Acknowledgments
 
--  [xUnit](https://github.com/xunit/xunit)
+- [xUnit](https://github.com/xunit/xunit)
 - [SimpleImpersonation](https://github.com/mj1856/SimpleImpersonation) 
 - [Ionicons](https://github.com/ionic-team/ionicons)
