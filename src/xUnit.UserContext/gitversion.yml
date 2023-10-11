@@ -1,0 +1,11 @@
+﻿mode: Mainline
+continuous-delivery-fallback-tag: CI
+major-version-bump-message: '\+semver:\s?(breaking|major)'
+minor-version-bump-message: '\+semver:\s?(feature|minor)'
+patch-version-bump-message: '\+semver:\s?(fix|patch|bug)'
+no-bump-message: '\+semver:\s?(none|skip)'
+commit-message-incrementing: MergeMessageOnly
+branches: {}
+ignore:
+  sha: []
+merge-message-formats: {}
